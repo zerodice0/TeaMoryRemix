@@ -50,10 +50,6 @@ function Map() {
     let map = new window.kakao.maps.Map(container, options);
   }, [])
 
-  const addA = () => {
-    setA(a + 1);
-  }
-
   return (
     <div id="map" style={{width: "100vw", height: "100vh"}}></div>
   )
@@ -61,10 +57,8 @@ function Map() {
 
 function Document({
   children,
-  title
 }: {
   children: React.ReactNode;
-  title?: string;
 }) {
   return (
     <html lang="en">
