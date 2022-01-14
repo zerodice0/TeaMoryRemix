@@ -1,15 +1,17 @@
 import {
-  Links,
   LiveReload,
   Meta,
   Scripts,
-  ScrollRestoration,
+  useCatch,
 } from "remix";
 import type { LinksFunction } from "remix";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import globalStylesUrl from "~/styles/global.css";
 import darkStylesUrl from "~/styles/dark.css";
+import { ChakraProvider, Box, Heading, Grid, GridItem } from "@chakra-ui/react";
+
+import { KakaoMap } from './components/kakaoMap';
 
 // https://remix.run/api/app#links
 export let links: LinksFunction = () => {
@@ -27,8 +29,17 @@ export let links: LinksFunction = () => {
 // https://remix.run/api/conventions#route-filenames
 export default function App() {
   return (
-    <Document>
-      <Map />
+    <Document title="TeaMory">
+      <ChakraProvider>
+        <Grid w="100vw" h="100vh" templateColumns="repeat(4, 1fr)">
+          <GridItem colSpan={3}>
+            <KakaoMap />
+          </GridItem>
+          <GridItem>
+            Hello!
+          </GridItem>
+        </Grid>
+      </ChakraProvider>
     </Document>
   );
 }
@@ -39,35 +50,20 @@ declare global {
   }
 }
 
-function Map() {
-  const mapContainer = useRef(null);
-  
-  useEffect(() => {
-    const options = {
-      center: new window.kakao.maps.LatLng(33.450701, 126.570667),
-      level: 3
-    }
-
-    new window.kakao.maps.Map(mapContainer.current, options)
-  })
-
-  return (
-    <div ref={mapContainer} style={{width: "100vw", height: "100vh"}}></div>
-  )
-}
-
-function Document({
+const Document = ({
   children,
+  title,
 }: {
   children: React.ReactNode;
-}) {
+  title: string,
+}) => {
   return (
     <html lang="en">
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />
         <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=9c00a28773c06d77e17b4fd10f8fa42c"></script>
-        <title>TeaMory</title>
+        <title>{title}</title>
       </head>
       <body>
         {children}
@@ -77,4 +73,32 @@ function Document({
       </body>
     </html>
   );
+}
+
+export function ErrorBoundary({ error }: { error: Error }) {
+  return (
+    <Document title='Error!'>
+      <ChakraProvider>
+        <Box>
+          <Heading as='h1'>There was an error</Heading>
+        </Box>
+      </ChakraProvider>
+    </Document>
+  )
+}
+
+export function CatchBoundary() {
+  let caught = useCatch()
+
+  return (
+    <Document title={`${caught.status} ${caught.statusText}`}>
+      <ChakraProvider>
+        <Box>
+          <Heading as='h1'>
+            {caught.status} {caught.statusText}
+          </Heading>
+        </Box>
+      </ChakraProvider>
+    </Document>
+  )
 }
