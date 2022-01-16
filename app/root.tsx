@@ -1,11 +1,12 @@
 import {
-  LiveReload,
   Meta,
   Scripts,
   useCatch,
+  LiveReload,
+  LoaderFunction,
+  useLoaderData,
 } from "remix";
 import type { LinksFunction } from "remix";
-import { useEffect, useRef, useState } from "react";
 
 import globalStylesUrl from "~/styles/global.css";
 import darkStylesUrl from "~/styles/dark.css";
@@ -24,6 +25,10 @@ export let links: LinksFunction = () => {
     }
   ];
 };
+
+export let loader: LoaderFunction = () => {
+  return {kakaoApiKey: process.env.KAKAO_API_KEY}
+}
 
 // https://remix.run/api/conventions#default-export
 // https://remix.run/api/conventions#route-filenames
@@ -49,7 +54,6 @@ export default function App() {
   );
 }
 
-
 const Document = ({
   children,
   title,
@@ -57,12 +61,15 @@ const Document = ({
   children: React.ReactNode;
   title: string,
 }) => {
+  const data = useLoaderData();
+  const kakaoMapUrl = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${data.kakaoApiKey}&libraries=services`;
+  
   return (
     <html lang="en">
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />
-        <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=9c00a28773c06d77e17b4fd10f8fa42c&libraries=services"></script>
+        <script type="text/javascript" src={kakaoMapUrl}></script>
         <title>{title}</title>
       </head>
       <body>
