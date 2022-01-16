@@ -9,7 +9,7 @@ import { useEffect, useRef, useState } from "react";
 
 import globalStylesUrl from "~/styles/global.css";
 import darkStylesUrl from "~/styles/dark.css";
-import { ChakraProvider, Box, Heading, Grid, GridItem } from "@chakra-ui/react";
+import { ChakraProvider, Box, Heading, Grid, GridItem, Container, Stack, Skeleton, Center, VStack, StackDivider } from "@chakra-ui/react";
 
 import { KakaoMap } from './components/kakaoMap';
 
@@ -36,7 +36,12 @@ export default function App() {
             <KakaoMap />
           </GridItem>
           <GridItem>
-            Hello!
+            <Box maxW='sm'
+              borderWidth='1px'
+              borderRadius='lg'
+              m="1">
+              Hello
+            </Box>
           </GridItem>
         </Grid>
       </ChakraProvider>
@@ -44,11 +49,6 @@ export default function App() {
   );
 }
 
-declare global {
-  interface Window {
-    kakao: any;
-  }
-}
 
 const Document = ({
   children,
@@ -62,7 +62,7 @@ const Document = ({
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />
-        <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=9c00a28773c06d77e17b4fd10f8fa42c"></script>
+        <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=9c00a28773c06d77e17b4fd10f8fa42c&libraries=services"></script>
         <title>{title}</title>
       </head>
       <body>
