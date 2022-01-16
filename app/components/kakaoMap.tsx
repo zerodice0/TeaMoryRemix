@@ -1,38 +1,9 @@
 import { useEffect, useRef } from "react";
+import { MapData, Pagenation } from "./model/model";
 declare global {
   interface Window {
     kakao: any
   }
-}
-
-interface MapData {
-  address_name: string;
-  category_group_code: string;
-  category_group_name: string;
-  category_name: string;
-  distance: number;
-  id: string;
-  phone: string;
-  place_name: string;
-  place_url: string;
-  road_address_name: string;
-  x: number;
-  y: number;
-}
-
-interface Pagenation {
-  current: number;
-  first: number;
-  hasMaxPage: boolean;
-  hasNextPage: boolean;
-  last: number;
-  perPage: number;
-  totalCount: number;
-  gotoFirst: () => void;
-  gotoLast: () => void;
-  gotoPage: (page: number) => void;
-  nextPage: () => void;
-  prevPage: () => void;
 }
 
 export const KakaoMap = () =>  {
@@ -50,7 +21,7 @@ export const KakaoMap = () =>  {
     placeSearchObject = new window.kakao.maps.services.Places();
     infoWindowObject = new window.kakao.maps.InfoWindow({$index: 1});
 
-    placeSearchObject.keywordSearch('-', (data:MapData[], status:string, pagination:Pagenation) => {
+    placeSearchObject.keywordSearch('마곡나루', (data:MapData[], status:string, pagination:Pagenation) => {
       
     });
   }
