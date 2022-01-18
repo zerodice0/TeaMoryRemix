@@ -1,5 +1,6 @@
-import { Box, Button, ChakraProvider, Grid, GridItem, Input, Stack } from "@chakra-ui/react";
+import { Box, Button, Text, Grid, GridItem, Input, Stack, Container } from "@chakra-ui/react";
 import { ReactNode, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import useCurrentLocation from "~/modules/location/useCurrentLocation";
 import { MapData, Pagenation, UpdateSearchKeyword } from "./model/model";
 declare global {
   interface Window {
@@ -13,31 +14,46 @@ export const KakaoMap = ({children}:{
   const mapContainer = useRef(null);
   const [keyword, setKeyword] = useState("");
   const [kakaoMapSdk, setKakaoMapSdk] = useState<any>(null);
+  const [searchList, setSearchList] = useState<MapData[]>([]);
+  const {location, error} = useCurrentLocation();
 
-  useEffect(() => {
-    setKakaoMapSdk(window.kakao.maps);
-  }, [])
-
-  const {mapObject, placeSearchObject} = useMemo(() => {
+  const {
+    mapObject,
+    placeSearchObject
+  } = useMemo(() => {
     if (typeof window !== 'undefined' && kakaoMapSdk !== null) {
       const options = {
-        center: new kakaoMapSdk.LatLng(33.450701, 126.570667),
+        center: new kakaoMapSdk.LatLng(
+          location?.coords.latitude ?? 33.450701,
+          location?.coords.longitude ?? 126.570667
+        ),
         level: 3
       }
   
       const mapObject = new kakaoMapSdk.Map(mapContainer.current, options);
       const placeSearchObject = new kakaoMapSdk.services.Places();
-      
+
       return {mapObject, placeSearchObject};
     } else {
-      return {mapObject: null, placeSearchObject: null};
+      return {
+        mapObject: null,
+        placeSearchObject: null
+      };
     }
-  }, [kakaoMapSdk]);
+  }, [location]);
+
+  useEffect(() => {
+    setKakaoMapSdk(window.kakao.maps);
+  }, [])
 
   const searchByKeyword = (keyword: string) => {
-    placeSearchObject.keywordSearch(keyword, 
+    placeSearchObject.keywordSearch(keyword,
       (data:MapData[], status:string, pagination:Pagenation) => {
-        console.log(data);
+        setSearchList(data);
+      },
+      {
+        radius: 50,
+        useMapCenter: true
       }
     );
   }
@@ -57,7 +73,22 @@ export const KakaoMap = ({children}:{
             onChange={(event) => setKeyword(event.target.value)}/>
           <Button w="100%" onClick={() => searchByKeyword(keyword)}>Search</Button>
         </Box>
-        
+        <Box>
+          {
+            (searchList.length > 0)
+              && searchList.map((data, index) => (
+                <Box key={index} m='2' p='2' maxW='sm'
+                  borderWidth='1px'
+                  borderRadius='lg'>
+                  <Stack>
+                    <Text fontSize='xl'>{data.place_name}</Text>
+                    <Box fontSize='lg'>{data.address_name}</Box>
+                    
+                  </Stack>
+                </Box>
+              ))
+          }
+        </Box>
       </GridItem>
     </Grid>
   )
