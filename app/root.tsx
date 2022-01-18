@@ -10,10 +10,9 @@ import type { LinksFunction } from "remix";
 
 import globalStylesUrl from "~/styles/global.css";
 import darkStylesUrl from "~/styles/dark.css";
-import { ChakraProvider, Box, Heading, Grid, GridItem, Container, Stack, Skeleton, Center, VStack, StackDivider } from "@chakra-ui/react";
+import { ChakraProvider, Box, Heading } from "@chakra-ui/react";
 
-import { KakaoMap } from './components/kakaoMap';
-
+import { KakaoMap } from './components/kakaoMap/kakaoMap';
 // https://remix.run/api/app#links
 export let links: LinksFunction = () => {
   return [
@@ -36,19 +35,11 @@ export default function App() {
   return (
     <Document title="TeaMory">
       <ChakraProvider>
-        <Grid w="100vw" h="100vh" templateColumns="repeat(4, 1fr)">
-          <GridItem colSpan={3}>
-            <KakaoMap />
-          </GridItem>
-          <GridItem>
-            <Box maxW='sm'
-              borderWidth='1px'
-              borderRadius='lg'
-              m="1">
-              Hello
-            </Box>
-          </GridItem>
-        </Grid>
+        <Box w="100vw" h="100vh">
+          <KakaoMap>
+            <Box></Box>
+          </KakaoMap>
+        </Box>
       </ChakraProvider>
     </Document>
   );
