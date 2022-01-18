@@ -27,3 +27,5 @@ export interface Pagenation {
   nextPage: () => void;
   prevPage: () => void;
 }
+
+export type UpdateSearchKeyword = (data:MapData[], status:string, pagination:Pagenation) => void
