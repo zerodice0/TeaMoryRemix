@@ -14,6 +14,7 @@ import { ChakraProvider, Box, Heading } from "@chakra-ui/react";
 
 import { KakaoMap } from './components/kakaoMap/kakaoMap';
 import useCurrentLocation from "./modules/location/useCurrentLocation";
+
 // https://remix.run/api/app#links
 export let links: LinksFunction = () => {
   return [
@@ -27,7 +28,7 @@ export let links: LinksFunction = () => {
 };
 
 export let loader: LoaderFunction = () => {
-  return {kakaoApiKey: process.env.KAKAO_API_KEY}
+  return {kakaoApiKey: process.env.KAKAO_API_KEY?.replace(/&amp;/g, "&")};
 }
 
 // https://remix.run/api/conventions#default-export
@@ -54,8 +55,7 @@ const Document = ({
   title: string,
 }) => {
   const data = useLoaderData();
-  const kakaoMapUrl = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${data.kakaoApiKey}&libraries=services`
-    .replace(/&amp;/g, "&");
+  const kakaoMapUrl = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${data.kakaoApiKey}&libraries=services`;
   
   return (
     <html lang="en">
