@@ -55,7 +55,7 @@ const Document = ({
 }) => {
   const data = useLoaderData();
   const kakaoMapUrl = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${data.kakaoApiKey}&libraries=services`
-    .replace(/&amp/g, "&");
+    .replace(/&amp;/g, "&");
   
   return (
     <html lang="en">
