@@ -62,7 +62,7 @@ const Document = ({
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />
-        <script type="text/javascript" src={kakaoMapUrl+`&libraries=services`}></script>
+        <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=9c00a28773c06d77e17b4fd10f8fa42c"></script>
         <title>{title}</title>
       </head>
       <body>
