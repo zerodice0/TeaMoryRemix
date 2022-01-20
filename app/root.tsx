@@ -28,7 +28,7 @@ export let links: LinksFunction = () => {
 };
 
 export let loader: LoaderFunction = () => {
-  return {kakaoApiKey: process.env.KAKAO_API_KEY?.replace(/&amp;/g, "&")};
+  return {kakaoApiKey: process.env.KAKAO_API_KEY};
 }
 
 // https://remix.run/api/conventions#default-export
@@ -55,14 +55,14 @@ const Document = ({
   title: string,
 }) => {
   const data = useLoaderData();
-  const kakaoMapUrl = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${data.kakaoApiKey}&libraries=services`;
+  const kakaoMapUrl = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${data.kakaoApiKey}`;
   
   return (
     <html lang="en">
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />
-        <script type="text/javascript" src={kakaoMapUrl}></script>
+        <script type="text/javascript" src={kakaoMapUrl+`&libraries=services`}></script>
         <title>{title}</title>
       </head>
       <body>
