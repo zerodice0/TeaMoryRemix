@@ -1,5 +1,5 @@
-import { Box, Button, Text, Grid, GridItem, Input, Stack, Container } from "@chakra-ui/react";
-import { ReactNode, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Box, Button, Text, Grid, GridItem, Input, Stack } from "@chakra-ui/react";
+import { ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import useCurrentLocation from "~/modules/location/useCurrentLocation";
 import { MapData, Pagenation, UpdateSearchKeyword } from "./model/model";
 declare global {
@@ -24,8 +24,8 @@ export const KakaoMap = ({children}:{
     if (typeof window !== 'undefined' && kakaoMapSdk !== null) {
       const options = {
         center: new kakaoMapSdk.LatLng(
-          location?.coords.latitude ?? 33.450701,
-          location?.coords.longitude ?? 126.570667
+          location.latitude,
+          location.longitude
         ),
         level: 3
       }
@@ -52,8 +52,11 @@ export const KakaoMap = ({children}:{
         setSearchList(data);
       },
       {
-        radius: 50,
-        useMapCenter: true
+        radius: 100,
+        location: new kakaoMapSdk.LatLng(
+          location.latitude,
+          location.longitude
+        )
       }
     );
   }
@@ -83,7 +86,6 @@ export const KakaoMap = ({children}:{
                   <Stack>
                     <Text fontSize='xl'>{data.place_name}</Text>
                     <Box fontSize='lg'>{data.address_name}</Box>
-                    
                   </Stack>
                 </Box>
               ))
