@@ -13,6 +13,7 @@ import darkStylesUrl from "~/styles/dark.css";
 import { ChakraProvider, Box, Heading } from "@chakra-ui/react";
 
 import { KakaoMap } from './components/kakaoMap/kakaoMap';
+import useCurrentLocation from "./modules/location/useCurrentLocation";
 // https://remix.run/api/app#links
 export let links: LinksFunction = () => {
   return [
@@ -53,7 +54,8 @@ const Document = ({
   title: string,
 }) => {
   const data = useLoaderData();
-  const kakaoMapUrl = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${data.kakaoApiKey}&libraries=services`;
+  const kakaoMapUrl = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${data.kakaoApiKey}&libraries=services`
+    .replace(/&amp/g, "&");
   
   return (
     <html lang="en">
