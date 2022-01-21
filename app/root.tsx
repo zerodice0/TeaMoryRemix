@@ -55,14 +55,13 @@ const Document = ({
   title: string,
 }) => {
   const data = useLoaderData();
-  const kakaoMapUrl = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${data.kakaoApiKey}`;
-  
+
   return (
     <html lang="en">
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />
-        <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=9c00a28773c06d77e17b4fd10f8fa42c&libraries=services"></script>
+        <script type="text/javascript" src={`//dapi.kakao.com/v2/maps/sdk.js?appkey=${data.kakaoApiKey}&libraries=services`}></script>
         <title>{title}</title>
       </head>
       <body>
