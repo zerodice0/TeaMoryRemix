@@ -13,7 +13,8 @@ import darkStylesUrl from "~/styles/dark.css";
 import { ChakraProvider, Box, Heading } from "@chakra-ui/react";
 
 import { KakaoMap } from './components/kakaoMap/kakaoMap';
-import useCurrentLocation from "./modules/location/useCurrentLocation";
+import { useEffect } from "react";
+import useFirebase from "./modules/firebase/useFirebase";
 
 // https://remix.run/api/app#links
 export let links: LinksFunction = () => {
@@ -27,8 +28,22 @@ export let links: LinksFunction = () => {
   ];
 };
 
-export let loader: LoaderFunction = () => {
-  return {kakaoApiKey: process.env.KAKAO_API_KEY};
+export let loader: LoaderFunction = (): {
+  kakaoApiKey: string | undefined,
+  firebaseConfig: FirebaseConfig
+} => {
+  return {
+    kakaoApiKey: process.env.KAKAO_API_KEY,
+    firebaseConfig: {
+      apiKey: process.env.FIREBASE_API_KEY,
+      authDomain: process.env.FIREBASE_AUTH_DOMAIN,
+      projectId: process.env.FIREBASE_PROJECT_ID,
+      storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
+      messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
+      appId: process.env.FIREBASE_APP_ID,
+      measurementId: process.env.FIREBASE_MEASUREMENT_ID
+    }
+  };
 }
 
 // https://remix.run/api/conventions#default-export
@@ -55,6 +70,25 @@ const Document = ({
   title: string,
 }) => {
   const data = useLoaderData();
+
+  const {getCollection} = useFirebase();
+
+  const firebaseTest = async () => {
+    // const docRef = await addDoc(collection(database, 'menu'), {
+    //   name: '아메리카노',
+    //   price: '2500',
+    //   description: '아메아메아메 아메리카노오오 조와 참 조와아'
+    // }) 
+    
+    const querySnapshot = await getCollection('menu');
+    querySnapshot?.forEach(doc => {
+      console.log(doc.data().name)
+    });
+  }
+  
+  useEffect(() => {
+    firebaseTest();
+  }, [getCollection]);
 
   return (
     <html lang="en">
