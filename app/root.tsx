@@ -6,27 +6,15 @@ import {
   LoaderFunction,
   useLoaderData,
 } from "remix";
+
 import type { LinksFunction } from "remix";
 
-import globalStylesUrl from "~/styles/global.css";
-import darkStylesUrl from "~/styles/dark.css";
 import { ChakraProvider, Box, Heading } from "@chakra-ui/react";
 
-import { KakaoMap } from './components/kakaoMap/kakaoMap';
-import { useEffect } from "react";
+// import { KakaoMap } from './components/kakaoMap/kakaoMap';
+import { useEffect, useState } from "react";
 import useFirebase from "./modules/firebase/useFirebase";
-
-// https://remix.run/api/app#links
-export let links: LinksFunction = () => {
-  return [
-    { rel: "stylesheet", href: globalStylesUrl },
-    {
-      rel: "stylesheet",
-      href: darkStylesUrl,
-      media: "(prefers-color-scheme: dark)"
-    }
-  ];
-};
+import SignUp from "./components/signUp/signUp";
 
 export let loader: LoaderFunction = (): {
   kakaoApiKey: string | undefined,
@@ -49,14 +37,16 @@ export let loader: LoaderFunction = (): {
 // https://remix.run/api/conventions#default-export
 // https://remix.run/api/conventions#route-filenames
 export default function App() {
+
   return (
     <Document title="TeaMory">
       <ChakraProvider>
-        <Box w="100vw" h="100vh">
+        <SignUp />
+        {/* <Box w="100vw" h="90vh">
           <KakaoMap>
             <Box></Box>
           </KakaoMap>
-        </Box>
+        </Box> */}
       </ChakraProvider>
     </Document>
   );
@@ -88,17 +78,17 @@ const Document = ({
   
   useEffect(() => {
     firebaseTest();
-  }, [getCollection]);
+  }, []);
 
   return (
     <html lang="en">
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />
-        <script type="text/javascript" src={`//dapi.kakao.com/v2/maps/sdk.js?appkey=${data.kakaoApiKey}&libraries=services`}></script>
+        {data?.kakaoApiKey && <script type="text/javascript" src={`//dapi.kakao.com/v2/maps/sdk.js?appkey=${data.kakaoApiKey}&libraries=services`}></script>}
         <title>{title}</title>
       </head>
-      <body>
+      <body style={{background: "#5a5353"}}>
         {children}
         {process.env.NODE_ENV === "development" && <LiveReload />}
         <Meta/>
