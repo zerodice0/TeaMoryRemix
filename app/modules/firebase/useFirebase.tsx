@@ -1,6 +1,6 @@
-import { Analytics, getAnalytics } from "firebase/analytics";
-import { FirebaseApp, initializeApp } from "firebase/app";
-import { collection, DocumentData, Firestore, getDocs, getFirestore, QuerySnapshot } from "firebase/firestore";
+import { Analytics, getAnalytics } from "@firebase/analytics";
+import { FirebaseApp, initializeApp } from "@firebase/app";
+import { collection, DocumentData, Firestore, getDocs, getFirestore, QuerySnapshot } from "@firebase/firestore";
 import { useEffect, useState } from "react";
 import { useLoaderData } from "remix"
 
