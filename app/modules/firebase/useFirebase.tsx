@@ -5,21 +5,24 @@ import { useEffect, useState } from "react";
 import { useLoaderData } from "remix"
 
 const useFirebase = () => {
-  const {firebaseConfig} = useLoaderData();
+  const data = useLoaderData();
+  const firebaseConfig: FirebaseConfig | null = data?.firebaseConfig;
 
   const [app, setApp] = useState<FirebaseApp | null>(null);
   const [database, setDatabase] = useState<Firestore | null>(null);
   const [analytics, setAnalytics] = useState<Analytics | null>(null);
 
   useEffect(() => {
-    const app = initializeApp(firebaseConfig);
-    const database = getFirestore(app);
-    const analytics = getAnalytics(app);
-
-    setApp(app);
-    setDatabase(database);
-    setAnalytics(analytics);
-  }, [])
+    if (firebaseConfig != null) {
+      const app = initializeApp(firebaseConfig);
+      const database = getFirestore(app);
+      const analytics = getAnalytics(app);
+  
+      setApp(app);
+      setDatabase(database);
+      setAnalytics(analytics);
+    }
+  }, [firebaseConfig])
 
   const getCollection = async (path: string) => {
     let result: QuerySnapshot<DocumentData> | null = null;
