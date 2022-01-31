@@ -7,8 +7,6 @@ import {
   useLoaderData,
 } from "remix";
 
-import type { LinksFunction } from "remix";
-
 import { ChakraProvider, Box, Heading } from "@chakra-ui/react";
 
 // import { KakaoMap } from './components/kakaoMap/kakaoMap';
