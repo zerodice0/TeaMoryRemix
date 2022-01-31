@@ -1,18 +1,66 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { EmailIcon, LockIcon } from "@chakra-ui/icons";
 import { getAuth, createUserWithEmailAndPassword } from "@firebase/auth";
 import { Flex, Stack, Text, FormControl, InputGroup, InputLeftElement, Input, Button, Box, Heading } from "@chakra-ui/react";
 import { Form } from "remix";
+import { FirebaseError } from "@firebase/app";
 
 const SignUp = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const emailRef = useRef<HTMLInputElement>(null);
+  const passwordRef = useRef<HTMLInputElement>(null);
+  const confirmPasswordRef = useRef<HTMLInputElement>(null);
+  const [errorMessage, setErrorMessage] = useState<string|null>(null);
+  const [isEmailError, setEmailError] = useState(false);
+  const [isPasswordError, setPasswordError] = useState(false);
+  const [isConfrimPasswordError, setConfirmPasswordError] = useState(false);
 
   const signUp = async () => {
-    const auth = getAuth();
-    const { user } = await createUserWithEmailAndPassword(auth, email, password);
+    const email:string = emailRef?.current?.value ?? "";
+    const password:string = passwordRef?.current?.value ?? "";
+    const confirmPassword:string = confirmPasswordRef?.current?.value ?? "";
 
-    console.log(user);
+    setEmailError(false);
+    setPasswordError(false);
+    setConfirmPasswordError(false);
+    setErrorMessage(null);
+
+    if (password === confirmPassword) {
+      try {
+        const auth = getAuth();
+        const { user } = await createUserWithEmailAndPassword(auth, email, password);
+
+        console.log(user);
+      } catch(error) {
+        if (error instanceof FirebaseError) {
+          let emailError = false;
+          let passwordError = false;
+
+          switch (error.code) {
+            case "auth/email-already-in-use":
+              setErrorMessage("이미 사용중인 이메일입니다.");
+              emailError = true;
+              break;
+            case "auth/invalid-email":
+              setErrorMessage("유효하지 않은 이메일입니다.");
+              emailError = true;
+              break;
+            case "auth/weak-password":
+              setErrorMessage("6자 이상의 비밀번호를 사용해주세요.");
+              passwordError = true;
+            break;
+            default:
+              setErrorMessage("알 수 없는 오류가 발생했습니다.");
+            break;
+          }
+
+          setEmailError(emailError);
+          setPasswordError(passwordError);
+        }
+      }
+    } else {
+      setErrorMessage("비밀번호가 일치하지 않습니다.");
+      setConfirmPasswordError(true);
+    }
   }
 
   return (
@@ -34,7 +82,7 @@ const SignUp = () => {
               alignItems="center"
             >
               <Heading as="h1" color="#9cbfa7">
-                TeaMory
+                Sign up
               </Heading>
               <Text color="#9cbfa7">
                 share your memory about tea to your friends!
@@ -43,9 +91,13 @@ const SignUp = () => {
                 <InputGroup>
                   <InputLeftElement children={<EmailIcon color="#9cbfa7" />} />
                   <Input
-                    onChange={(event) => setEmail(event.target.value)}
+                    isRequired={true}
+                    ref={emailRef}
                     placeholder="email address"
                     color="#9cbfa7"
+                    focusBorderColor="#9cbfa7"
+                    errorBorderColor="#ff5e5b"
+                    isInvalid={isEmailError}
                   />
                 </InputGroup>
               </FormControl>
@@ -54,9 +106,13 @@ const SignUp = () => {
                   <InputLeftElement children={<LockIcon color="#9cbfa7" />} />
                   <Input
                     type="password"
-                    onChange={(event) => setPassword(event.target.value)}
+                    isRequired={true}
+                    ref={passwordRef}
                     placeholder="password"
                     color="#9cbfa7"
+                    focusBorderColor="#9cbfa7"
+                    errorBorderColor="#ff5e5b"
+                    isInvalid={isPasswordError}
                   />
                 </InputGroup>
               </FormControl>
@@ -65,10 +121,15 @@ const SignUp = () => {
                   <InputLeftElement children={<LockIcon color="#9cbfa7" />} />
                   <Input
                     type="password"
-                    onChange={(event) => setPassword(event.target.value)}
+                    isRequired={true}
+                    ref={confirmPasswordRef}
                     placeholder="Confirm password"
                     color="#9cbfa7"
+                    focusBorderColor="#9cbfa7"
+                    errorBorderColor="#ff5e5b"
+                    isInvalid={isConfrimPasswordError}
                   />
+                  
                 </InputGroup>
               </FormControl>
               <Button 
@@ -79,6 +140,12 @@ const SignUp = () => {
               >
                 Sign up
               </Button>
+              {
+                errorMessage
+                && <Text color="#ff5e5b">
+                  {errorMessage}
+                </Text>
+              }
             </Stack>
           </Form>
         </Box>
