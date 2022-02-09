@@ -5,14 +5,14 @@ import {
   LiveReload,
   LoaderFunction,
   useLoaderData,
+  Outlet,
+  Link as RemixLink,
 } from "remix";
-
-import { ChakraProvider, Box, Heading } from "@chakra-ui/react";
+import { ChakraProvider, Box, Heading, Breadcrumb, BreadcrumbItem, BreadcrumbLink, Flex, Spacer } from "@chakra-ui/react";
 
 // import { KakaoMap } from './components/kakaoMap/kakaoMap';
 import { useEffect, useState } from "react";
 import useFirebase from "./modules/firebase/useFirebase";
-import SignUp from "./components/signUp/signUp";
 
 export let loader: LoaderFunction = (): {
   kakaoApiKey: string | undefined,
@@ -39,12 +39,24 @@ export default function App() {
   return (
     <Document title="TeaMory">
       <ChakraProvider>
-        <SignUp />
-        {/* <Box w="100vw" h="90vh">
-          <KakaoMap>
-            <Box></Box>
-          </KakaoMap>
-        </Box> */}
+        <Flex>
+          <Spacer />
+          <Box p="4">
+            <Breadcrumb>
+              <BreadcrumbItem>
+                <BreadcrumbLink as={RemixLink} to="/signin">
+                Sign in
+                </BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbItem>
+                <BreadcrumbLink as={RemixLink} to="/signup">
+                Sign up
+                </BreadcrumbLink>
+              </BreadcrumbItem>
+            </Breadcrumb>
+          </Box>
+        </Flex>
+        <Outlet />
       </ChakraProvider>
     </Document>
   );
