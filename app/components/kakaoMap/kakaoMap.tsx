@@ -17,10 +17,7 @@ export const KakaoMap = ({children}:{
   const [searchList, setSearchList] = useState<MapData[]>([]);
   const {location, error} = useCurrentLocation();
 
-  const {
-    mapObject,
-    placeSearchObject
-  } = useMemo(() => {
+  const {placeSearchObject} = useMemo(() => {
     if (typeof window !== 'undefined' && kakaoMapSdk !== null) {
       const options = {
         center: new kakaoMapSdk.LatLng(
