@@ -8,9 +8,8 @@ import {
   Outlet,
   Link as RemixLink,
 } from "remix";
-import { ChakraProvider, Box, Heading, Breadcrumb, BreadcrumbItem, BreadcrumbLink, Flex, Spacer } from "@chakra-ui/react";
+import { ChakraProvider, Box, Heading, Breadcrumb, BreadcrumbItem, BreadcrumbLink, Flex, Spacer, Text, Center, } from "@chakra-ui/react";
 
-// import { KakaoMap } from './components/kakaoMap/kakaoMap';
 import { useEffect, useState } from "react";
 import useFirebase from "./modules/firebase/useFirebase";
 
@@ -35,25 +34,31 @@ export let loader: LoaderFunction = (): {
 // https://remix.run/api/conventions#default-export
 // https://remix.run/api/conventions#route-filenames
 export default function App() {
-
   return (
     <Document title="TeaMory">
       <ChakraProvider>
-        <Flex>
+        <Flex bg="#9cbfa7" shadow="dark-lg">
+          <Center>
+            <Heading p="2">
+              TeaMory
+            </Heading>
+          </Center>
           <Spacer />
           <Box p="4">
-            <Breadcrumb>
-              <BreadcrumbItem>
-                <BreadcrumbLink as={RemixLink} to="/signin">
-                Sign in
-                </BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbItem>
-                <BreadcrumbLink as={RemixLink} to="/signup">
-                Sign up
-                </BreadcrumbLink>
-              </BreadcrumbItem>
-            </Breadcrumb>
+            <Center>
+              <Breadcrumb>
+                <BreadcrumbItem>
+                  <BreadcrumbLink as={RemixLink} to="/signin">
+                  Sign in
+                  </BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbItem>
+                  <BreadcrumbLink as={RemixLink} to="/signup">
+                  Sign up
+                  </BreadcrumbLink>
+                </BreadcrumbItem>
+              </Breadcrumb>
+            </Center>
           </Box>
         </Flex>
         <Outlet />
