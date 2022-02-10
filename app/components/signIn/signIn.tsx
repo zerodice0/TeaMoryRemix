@@ -5,14 +5,14 @@ import { Flex, Stack, Text, FormControl, InputGroup, InputLeftElement, Input, Bu
 import { Form } from "remix";
 import { FirebaseError } from "@firebase/app";
 
-const SignUp = () => {
+const signIn = () => {
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
   const [errorMessage, setErrorMessage] = useState<string|null>(null);
   const [isEmailError, setEmailError] = useState(false);
   const [isPasswordError, setPasswordError] = useState(false);
 
-  const signUp = async () => {
+  const signIn = async () => {
     const email:string = emailRef?.current?.value ?? "";
     const password:string = passwordRef?.current?.value ?? "";
   
@@ -109,7 +109,7 @@ const SignUp = () => {
               </FormControl>
               <Button 
                 w="100%"
-                onClick={() => signUp()}
+                onClick={() => signIn()}
                 color="#5A5353"
                 background="#9cbfa7"
               >
@@ -128,4 +128,4 @@ const SignUp = () => {
   );
 }
 
-export default SignUp;
+export default signIn;
