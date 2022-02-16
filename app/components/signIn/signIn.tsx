@@ -1,9 +1,10 @@
 import { useRef, useState } from "react";
 import { EmailIcon, LockIcon } from "@chakra-ui/icons";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "@firebase/auth";
 import { Flex, Stack, Text, FormControl, InputGroup, InputLeftElement, Input, Button, Box, Heading } from "@chakra-ui/react";
 import { Form } from "remix";
 import { FirebaseError } from "@firebase/app";
+import { useCookies } from "react-cookie";
+import { getAuth, signInWithEmailAndPassword } from "@firebase/auth";
 
 const signIn = () => {
   const emailRef = useRef<HTMLInputElement>(null);
@@ -11,6 +12,7 @@ const signIn = () => {
   const [errorMessage, setErrorMessage] = useState<string|null>(null);
   const [isEmailError, setEmailError] = useState(false);
   const [isPasswordError, setPasswordError] = useState(false);
+  const [cookies, setCookie, removeCookie] = useCookies<string, UserInformation>(['cookie-name']);
 
   const signIn = async () => {
     const email:string = emailRef?.current?.value ?? "";
@@ -24,7 +26,22 @@ const signIn = () => {
       const auth = getAuth();
       const { user } = await signInWithEmailAndPassword(auth, email, password);
 
+      const accessToken = await user.getIdToken(false)
+      const userInformation:UserInformation = {
+        accessToken: await user.getIdToken(false),
+        email: user.email ?? "",
+        displayName: user.displayName ?? user.email?.split("@")[0] ?? "",
+        refreshToken: user.refreshToken,
+        createdAt: user.metadata.creationTime ?? "",
+        lastLoginAt: user.metadata.lastSignInTime ?? "",
+        photoURL: ""
+      }
+
+      setCookie('userInformation', userInformation);
+      console.log(cookies);
+
       console.log(user);
+      console.log(accessToken);
     } catch(error) {
       if (error instanceof FirebaseError) {
         let emailError = false;
