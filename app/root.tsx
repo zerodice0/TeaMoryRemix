@@ -12,6 +12,8 @@ import { ChakraProvider, Box, Heading, Breadcrumb, BreadcrumbItem, BreadcrumbLin
 
 import { useEffect, useState } from "react";
 import useFirebase from "./modules/firebase/useFirebase";
+import { CookiesProvider } from "react-cookie";
+import { TitleBar } from "./components/titleBar/titleBar";
 
 export let loader: LoaderFunction = (): {
   kakaoApiKey: string | undefined,
@@ -36,33 +38,12 @@ export let loader: LoaderFunction = (): {
 export default function App() {
   return (
     <Document title="TeaMory">
-      <ChakraProvider>
-        <Flex bg="#9cbfa7" shadow="dark-lg">
-          <Center>
-            <Heading p="2">
-              TeaMory
-            </Heading>
-          </Center>
-          <Spacer />
-          <Box p="4">
-            <Center>
-              <Breadcrumb>
-                <BreadcrumbItem>
-                  <BreadcrumbLink as={RemixLink} to="/signin">
-                  Sign in
-                  </BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbItem>
-                  <BreadcrumbLink as={RemixLink} to="/signup">
-                  Sign up
-                  </BreadcrumbLink>
-                </BreadcrumbItem>
-              </Breadcrumb>
-            </Center>
-          </Box>
-        </Flex>
-        <Outlet />
-      </ChakraProvider>
+      <CookiesProvider>
+        <ChakraProvider>
+          <TitleBar />
+          <Outlet />
+        </ChakraProvider>
+      </CookiesProvider>
     </Document>
   );
 }
